@@ -1,0 +1,246 @@
+/* ===== Base ===== */
+:root {
+  --bg: #0b0f14;
+  --panel: #111826;
+  --panel-2: #0c1424;
+  --stroke: #273244;
+  --text: #e8eef5;
+  --muted: #b6c2d1;
+
+  --primary: #2b5cff;
+  --primary-2: #3b6bff;
+  --primary-3: #224ae6;
+
+  --danger: #e24c4c;
+  --danger-2: #f06a6a;
+  --danger-3: #c33a3a;
+
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial,
+    sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== Header ===== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--stroke);
+}
+header a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+/* ===== Layout ===== */
+main {
+  max-width: 980px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* ===== Controls ===== */
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+input,
+select,
+textarea {
+  background: #0b1220;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  color: var(--text);
+  outline: none;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #93a2b6;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-2);
+  box-shadow: 0 0 0 3px rgba(59, 107, 255, 0.2);
+}
+
+/* datetime inputs a una altura cómoda */
+input[type="datetime-local"] {
+  min-height: 40px;
+}
+
+/* ===== Botones (unificados con login) ===== */
+button {
+  appearance: none;
+  border: 1px solid var(--primary-2);
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.02s ease;
+}
+button:hover {
+  background: var(--primary-2);
+}
+button:active {
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #0b1220;
+  border-color: var(--stroke);
+}
+.btn-secondary:hover {
+  border-color: #3a475c;
+}
+
+.btn-danger {
+  background: var(--danger);
+  border-color: var(--danger-2);
+}
+.btn-danger:hover {
+  background: var(--danger-2);
+}
+.btn-danger:active {
+  background: var(--danger-3);
+}
+
+/* Botones en toolbars (Recargar, Usuarios, Nueva, Salir) */
+nav a,
+nav button {
+  margin-left: 10px;
+  background: #0b1220;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--text);
+}
+nav button.primary,
+nav a.primary {
+  background: var(--primary);
+  border-color: var(--primary-2);
+  color: #fff;
+}
+
+/* ===== Lista / tarjetas ===== */
+.list {
+  display: grid;
+  gap: 12px;
+}
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+.task h4 {
+  margin: 0 0 4px 0;
+}
+.task .right {
+  display: flex;
+  gap: 8px;
+}
+
+/* badge */
+.tag {
+  font-size: 12px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: #0b1220;
+  color: var(--muted);
+}
+
+/* ===== Dialog ===== */
+dialog {
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 560px;
+  width: 100%;
+}
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 24px;
+}
+dialog h3 {
+  margin: 0 0 14px 0;
+  color: #fff;
+  font-size: 18px;
+}
+.modal .fields {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+.modal label {
+  font-size: 13px;
+  color: var(--muted);
+  display: block;
+  margin: 2px 0 4px;
+}
+.modal .inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ===== Utilidades ===== */
+.muted {
+  color: var(--muted);
+}
+.hidden {
+  display: none !important;
+}
+@media (max-width: 768px) {
+  button {
+    margin-bottom: 1rem;
+  }
+}

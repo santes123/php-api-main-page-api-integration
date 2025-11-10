@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/assets/css/docs.css">
+    <title>API Docs – Users & Tasks</title>
+  </head>
+  <body>
+    <header><h1>API Docs – Users & Tasks</h1></header>
+    <main>
+      <section class="card">
+        <h2>Base URL</h2>
+        <pre><code>http://localhost:8001</code></pre>
+        <p class="muted">
+          Aunque uses XAMPP para otras páginas, si ejecutas la API con el
+          servidor embebido de PHP, la base será
+          <code>http://localhost:8001</code> (p.ej. lanzando
+          <span class="kbd">php -S localhost:8001 -t public</span>).
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Autenticación</h2>
+        <p>
+          Se usa JWT con esquema <span class="tag">Bearer</span>. Primero, haz
+          login y guarda el token (y los metadatos de usuario).
+        </p>
+
+        <h3>POST /api/v1/auth/login</h3>
+        <pre><code>Content-Type: application/json
+
+{
+  "email": "demo@demo.com",
+  "password": "demo123"
+}</code></pre>
+
+        <h4>Respuesta 200</h4>
+        <pre><code>{
+  "token": "&lt;JWT&gt;",
+  "user": {
+    "role": "admin" | "user",
+    "is_admin": true | false
+  }
+}</code></pre>
+
+        <h4>curl</h4>
+        <pre><code>curl -s -X POST http://localhost:8001/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@demo.com","password":"demo123"}'</code></pre>
+
+        <h4>fetch</h4>
+        <pre><code>const BASE = "http://localhost:8001";
+const r = await fetch(BASE + "/api/v1/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password })
+});
+const data = await r.json();
+if (!r.ok) throw data;
+
+// Guardar credenciales para el frontend
+localStorage.setItem("api_token", data.token);
+localStorage.setItem("api_me", JSON.stringify(data.user || {}));
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Tasks (restringido por token)</h2>
+        <p>
+          El <code>user_id</code> se infiere del JWT para usuarios normales.
+          Campos: <code>title</code>, <code>description</code>,
+          <code>starts_at</code>, <code>ends_at</code>,
+          <code>completed</code> (0/1).
+        </p>
+
+        <h3>GET /api/v1/tasks?per_page=20&amp;page=1</h3>
+        <pre><code>Authorization: Bearer &lt;JWT&gt;</code></pre>
+        <p>
+          <strong>Modo admin:</strong> añade <code>?all=1</code> para ver todas
+          las tareas, o filtra por usuario con <code>?user_id=&lt;id&gt;</code>.
+        </p>
+
+        <h4>Ejemplos (curl)</h4>
+        <pre><code># Usuario normal (ve sólo sus tareas)
+curl -s http://localhost:8001/api/v1/tasks \
+  -H "Authorization: Bearer &lt;JWT&gt;"
+
+# Admin: ver todas
+curl -s "http://localhost:8001/api/v1/tasks?all=1" \
+  -H "Authorization: Bearer &lt;JWT-ADMIN&gt;"
+
+# Admin: filtrar por usuario concreto
+curl -s "http://localhost:8001/api/v1/tasks?user_id=12" \
+  -H "Authorization: Bearer &lt;JWT-ADMIN&gt;"</code></pre>
+
+        <h3>POST /api/v1/tasks</h3>
+        <pre><code>Authorization: Bearer &lt;JWT&gt;
+Content-Type: application/json
+
+{
+  "title":"Reunión",
+  "description":"con equipo",
+  "starts_at":"2025-11-08 10:00:00",
+  "ends_at":"2025-11-08 11:00:00",
+  "completed": 0
+}</code></pre>
+        <p>
+          <strong>Modo admin:</strong> puedes asignar la tarea a otro usuario
+          enviando también <code>user_id</code>:
+        </p>
+        <pre><code>{
+  "title":"Planificación",
+  "user_id": 12
+}</code></pre>
+
+        <h3>GET /api/v1/tasks/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT&gt;</code></pre>
+        <p>
+          Usuarios normales sólo acceden a sus tareas; admin puede acceder a
+          cualquier <code>:id</code>.
+        </p>
+
+        <h3>PUT /api/v1/tasks/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT&gt;
+Content-Type: application/json
+
+{ "title":"Nuevo título", "completed":1 }</code></pre>
+        <p>
+          <strong>Modo admin:</strong> puedes reasignar con
+          <code>{"user_id": &lt;id&gt;}</code>. Usuarios normales no pueden
+          cambiar <code>user_id</code>.
+        </p>
+
+        <h3>DELETE /api/v1/tasks/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT&gt;</code></pre>
+        <p>
+          Usuarios normales sólo pueden eliminar sus tareas; admin puede
+          eliminar cualquier <code>:id</code>.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Users (ADMIN)</h2>
+        <p>
+          Necesitas un token con <span class="tag">role=admin</span>. Campos:
+          <code>email</code>, <code>first_name</code>, <code>last_name</code>,
+          <code>role</code> ("admin" | "user"). Para crear/editar:
+          <code>password</code> (se guardará como <code>password_hash</code>).
+          El unico endpoint accesible para usuarios NO admin ahora es <code>GET /api/v1/users</code>.
+        </p>
+
+        <h3>GET /api/v1/users?per_page=20&amp;page=1</h3>
+        <pre><code>Authorization: Bearer &lt;JWT-ADMIN&gt;</code></pre>
+
+        <h3>GET /api/v1/users/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT-ADMIN&gt;</code></pre>
+
+        <h3>POST /api/v1/users</h3>
+        <pre><code>Authorization: Bearer &lt;JWT-ADMIN&gt;
+Content-Type: application/json
+
+{
+  "email":"nuevo@demo.com",
+  "first_name":"Nuevo",
+  "last_name":"Usuario",
+  "role":"user",
+  "password":"Secreta123"
+}</code></pre>
+
+        <h3>PUT /api/v1/users/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT-ADMIN&gt;
+Content-Type: application/json
+
+{
+  "email":"nuevo2@demo.com",
+  "first_name":"Nombre",
+  "last_name":"Cambiado",
+  "role":"admin",
+  "password":"(opcional si quieres cambiarla)"
+}</code></pre>
+
+        <h3>DELETE /api/v1/users/:id</h3>
+        <pre><code>Authorization: Bearer &lt;JWT-ADMIN&gt;</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Errores y status</h2>
+        <ul class="grid">
+          <li>
+            <span class="tag">401</span> Unauthorized – falta o es inválido el
+            Bearer token
+          </li>
+          <li>
+            <span class="tag">403</span> Forbidden – token válido pero sin rol
+            admin en endpoints de users
+          </li>
+          <li><span class="tag">404</span> Not Found – recurso inexistente</li>
+          <li><span class="tag">409</span> Conflict – email duplicado</li>
+          <li><span class="tag">422</span> Unprocessable – validaciones</li>
+          <li><span class="tag">500</span> Internal – error inesperado</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+  <footer class="border-top mt-5 py-4">
+  <div class="container d-flex justify-content-between small text-muted">
+    <span>&copy; 2025 Gestor de Tareas</span>
+    <span>v1.0 · PHP + MySQL · Bootstrap 5</span>
+  </div>
+</footer>
+</html>

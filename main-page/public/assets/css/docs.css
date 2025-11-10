@@ -1,0 +1,62 @@
+:root {
+  font-family: system-ui;
+}
+body {
+  margin: 0;
+  background: #0b0f14;
+  color: #e8eef5;
+}
+header {
+  padding: 14px 16px;
+  background: #111826;
+  border-bottom: 1px solid #273244;
+}
+main {
+  max-width: 980px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+h1,
+h2,
+h3 {
+  margin: 0.4em 0;
+}
+code,
+pre {
+  background: #0b1220;
+  color: #e8eef5;
+  border: 1px solid #273244;
+  border-radius: 8px;
+}
+pre {
+  padding: 12px;
+  overflow: auto;
+}
+.card {
+  background: #111826;
+  border: 1px solid #273244;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.tag {
+  font-size: 12px;
+  border: 1px solid #273244;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #0b1220;
+}
+a {
+  color: #9cc1ff;
+}
+.grid {
+  display: grid;
+  gap: 10px;
+}
+.muted {
+  opacity: 0.75;
+}
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+}

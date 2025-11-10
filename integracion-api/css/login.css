@@ -1,0 +1,37 @@
+body {
+  font-family: system-ui;
+  margin: 0;
+  background: #0b0f14;
+  color: #e8eef5;
+}
+main {
+  max-width: 420px;
+  margin: 12vh auto;
+  padding: 24px;
+  background: #111826;
+  border: 1px solid #273244;
+  border-radius: 14px;
+}
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+}
+input,
+button {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #273244;
+  background: #0b1220;
+  color: #e8eef5;
+}
+button {
+  cursor: pointer;
+  background: #2b5cff;
+  border-color: #3b6bff;
+}
+.muted {
+  opacity: 0.8;
+}
